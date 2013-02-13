@@ -1,6 +1,9 @@
-set :output, { :standard => "/var/logs/my_app.log", :error => "/var/logs/my_app.errors.log" }
- 
+require './config/boot'
+require './config/environment'
+require 'clockwork'
 
-every 1.seconds do
-	p "Hello "
+include Clockwork
+
+every 3.seconds, "Modbus" do
+  puts "Size of Equipment is #{Equipment.all.size()}."
 end

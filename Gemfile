@@ -23,7 +23,7 @@ end
 
 gem 'jquery-rails'
 
-gem 'whenever'
+gem 'clockwork'
 
 gem 'serialport'
 gem 'clamp'
