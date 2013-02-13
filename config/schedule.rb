@@ -4,6 +4,8 @@ require 'clockwork'
 
 include Clockwork
 
-every 3.seconds, "Modbus" do
-  puts "Size of Equipment is #{Equipment.all.size()}."
+every 1.seconds, "Modbus" do
+	filename = "time modbus read --output mybackup.yml 192.168.31.68 %MW140 100"
+	result = system(filename)
+	p result
 end

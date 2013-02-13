@@ -24,6 +24,7 @@ end
 gem 'jquery-rails'
 
 gem 'clockwork'
+gem 'foreman'
 
 gem 'serialport'
 gem 'clamp'
