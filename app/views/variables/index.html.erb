@@ -1,20 +1,6 @@
 <h1>Listing variables</h1>
 
 <table>
-  <tr>
-    <th>Name</th>
-    <th>Desc</th>
-    <th>Address</th>
-    <th>Equipment</th>
-    <th>Is archive</th>
-    <th>Type</th>
-    <th>Last value</th>
-    <th>Datetime update value</th>
-    <th></th>
-    <th></th>
-    <th></th>
-  </tr>
-
 <% @variables.each do |variable| %>
   <tr>
     <td><%= variable.name %></td>
@@ -25,13 +11,13 @@
     <td><%= variable.var_type %></td>
     <td><%= variable.last_value %></td>
     <td><%= variable.datetime_update_value %></td>
-    <td><%= link_to 'Show', variable %></td>
-    <td><%= link_to 'Edit', edit_variable_path(variable) %></td>
-    <td><%= link_to 'Destroy', variable, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+    <td><%= link_to 'Show', equipment_variable_path(variable.equipment_id, variable.id) %></td>
+    <td><%= link_to 'Edit', edit_equipment_variable_path(variable.equipment_id, variable.id) %></td>
+    <td><%= link_to 'Destroy', equipment_variables_path(variable), method: :delete, data: { confirm: 'Are you sure?' } %></td>
   </tr>
 <% end %>
 </table>
 
 <br />
 
-<%= link_to 'New Variable', new_variable_path %>
+<%= link_to 'New Variable', new_equipment_variable_path %>

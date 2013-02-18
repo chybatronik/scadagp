@@ -2,7 +2,11 @@ class VariablesController < ApplicationController
   # GET /variables
   # GET /variables.json
   def index
-    @variables = Variable.all
+    if params.has_key? :equipment_id
+      @variables = Equipment.find(params[:equipment_id]).variable.all
+    else
+      @variables = Variable.all
+    end
 
     respond_to do |format|
       format.html # index.html.erb
@@ -24,7 +28,11 @@ class VariablesController < ApplicationController
   # GET /variables/new
   # GET /variables/new.json
   def new
-    @variable = Variable.new
+    if params.has_key? :equipment_id
+      @variable = Equipment.find(params[:equipment_id]).variable.new
+    else
+      @variable = Variable.new
+    end
 
     respond_to do |format|
       format.html # new.html.erb

@@ -1,8 +1,8 @@
 Scadagp::Application.routes.draw do
-  resources :variables
 
-
-  resources :equipment
+  resources :equipment do
+    resources :variables
+  end
 
   root :to => 'equipment#index'
   # The priority is based upon order of creation:
