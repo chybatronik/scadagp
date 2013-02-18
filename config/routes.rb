@@ -1,4 +1,7 @@
 Scadagp::Application.routes.draw do
+  resources :variables
+
+
   resources :equipment
 
   root :to => 'equipment#index'

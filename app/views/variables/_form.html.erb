@@ -1,0 +1,49 @@
+<%= form_for(@variable) do |f| %>
+  <% if @variable.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@variable.errors.count, "error") %> prohibited this variable from being saved:</h2>
+
+      <ul>
+      <% @variable.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :name %><br />
+    <%= f.text_field :name %>
+  </div>
+  <div class="field">
+    <%= f.label :desc %><br />
+    <%= f.text_area :desc %>
+  </div>
+  <div class="field">
+    <%= f.label :address %><br />
+    <%= f.text_field :address %>
+  </div>
+  <div class="field">
+    <%= f.label :equipment_id %><br />
+    <%= f.collection_select(:equipment_id, Equipment.all, :id, :name) %>
+  </div>
+  <div class="field">
+    <%= f.label :is_archive %><br />
+    <%= f.check_box :is_archive %>
+  </div>
+  <div class="field">
+    <%= f.label :var_type %><br />
+    <%= f.select(:var_type, [['Integer'], ['Float'],['Boolean']]) %>
+  </div>
+  <div class="field">
+    <%= f.label :last_value %><br />
+    <%= f.text_field :last_value %>
+  </div>
+  <div class="field">
+    <%= f.label :datetime_update_value %><br />
+    <%= f.datetime_select :datetime_update_value %>
+  </div>
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

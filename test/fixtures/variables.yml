@@ -1,0 +1,21 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  name: MyString
+  desc: MyText
+  address: MyString
+  equipment_id: 1
+  is_archive: false
+  type: 
+  last_value: 1.5
+  datetime_update_value: 2013-02-18 10:11:55
+
+two:
+  name: MyString
+  desc: MyText
+  address: MyString
+  equipment_id: 1
+  is_archive: false
+  type: 
+  last_value: 1.5
+  datetime_update_value: 2013-02-18 10:11:55

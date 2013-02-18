@@ -29,8 +29,10 @@ module Modbus
 
       def read_floats(sl)
         floats = read_and_unpack(sl, 'g')
+        result = {}
         (0...count).each do |n|
-          puts "#{ '%-10s' % address_to_s(addr_offset + n * data_size)} #{nice_float('% 16.8f' % floats[n])}"
+          result[address_to_s(addr_offset + n * data_size)] = floats[n]
+          #puts "#{ '%-10s' % address_to_s(addr_offset + n * data_size)} #{nice_float('% 16.8f' % floats[n])}"
         end
       end
 
@@ -46,9 +48,12 @@ module Modbus
         if options[:int]
           data = data.pack('S').unpack('s')
         end
+        result = {}
         read_range.zip(data).each do |pair|
-          puts "#{ '%-10s' % address_to_s(pair.first)} #{'%6d' % pair.last}"
+          result[address_to_s(pair.first)] = pair.last
+          #puts "#{ '%-10s' % address_to_s(pair.first)} #{'%6d' % pair.last}"
         end
+        return result
       end
 
       def read_words_to_file(sl)
@@ -90,15 +95,16 @@ module Modbus
               when :bit
                 read_coils(sl)
               when :int
-                read_registers(sl, :int => true)
+                return read_registers(sl, :int => true)
               when :word
-                read_registers(sl)
+                return read_registers(sl)
               when :float
-                read_floats(sl)
+                return read_floats(sl)
               when :dword
                 read_dwords(sl)
               end
             end
+
           end
         end
       end
