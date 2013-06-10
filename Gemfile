@@ -19,7 +19,6 @@ group :assets do
   gem 'uglifier', '>= 1.0.3'
   gem 'bootstrap-sass', '~> 2.3.1.0'
 end
-end
 
 gem 'jquery-rails'
 
@@ -32,7 +31,7 @@ gem 'modbus-cli'
 
 group :development do
   gem 'meta_request', '0.2.0'
-  gem 'rspec-rails', '~> 2.12.0'
+  gem 'rspec-rails', '~> 2.13.2'
   gem "database_cleaner"
   gem "spork"
   gem "capybara"

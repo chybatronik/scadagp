@@ -1,0 +1,26 @@
+= form_for(@equipment) do |f| 
+  - if @equipment.errors.any? 
+    #error_explanation.alert.alert-error
+      %h2
+        = pluralize(@equipment.errors.count, "error")
+        prohibited this task from being saved:
+
+      %ul
+      - @equipment.errors.full_messages.each do |msg|
+        %li
+          = msg 
+
+  .field
+    = f.label :name 
+    = f.text_field :name
+  
+  .field
+    = f.label :desc 
+    = f.text_area :desc
+
+  .field
+    = f.label :ip 
+    = f.text_area :ip
+  
+  .actions
+    = f.submit

@@ -28,12 +28,18 @@ GEM
     activesupport (3.2.13)
       i18n (= 0.6.1)
       multi_json (~> 1.0)
+    addressable (2.3.4)
     arel (3.0.2)
+    bootstrap-sass (2.3.1.2)
+      sass (~> 3.2)
     builder (3.0.4)
+    capybara (2.1.0)
+      mime-types (>= 1.16)
+      nokogiri (>= 1.3.3)
+      rack (>= 1.0.0)
+      rack-test (>= 0.5.4)
+      xpath (~> 2.0)
     clamp (0.6.1)
-    clockwork (0.5.2)
-      activesupport
-      tzinfo (~> 0.3.35)
     coffee-rails (3.2.2)
       coffee-script (>= 2.2.0)
       railties (~> 3.2.0)
@@ -42,6 +48,8 @@ GEM
       execjs
     coffee-script-source (1.6.2)
     daemons (1.1.9)
+    database_cleaner (1.0.1)
+    diff-lcs (1.2.4)
     dotenv (0.7.0)
     erubis (2.7.0)
     eventmachine (1.0.3)
@@ -55,6 +63,13 @@ GEM
       dotenv (>= 0.7)
       thor (>= 0.13.6)
       win32console (~> 1.3.0)
+    haml (4.0.3)
+      tilt
+    haml-rails (0.4)
+      actionpack (>= 3.1, < 4.1)
+      activesupport (>= 3.1, < 4.1)
+      haml (>= 3.1, < 4.1)
+      railties (>= 3.1, < 4.1)
     hike (1.2.3)
     i18n (0.6.1)
     journey (1.0.4)
@@ -62,6 +77,8 @@ GEM
       railties (>= 3.0, < 5.0)
       thor (>= 0.14, < 2.0)
     json (1.8.0)
+    launchy (2.3.0)
+      addressable (~> 2.3)
     libv8 (3.11.8.17)
     mail (2.5.4)
       mime-types (~> 1.16)
@@ -74,6 +91,7 @@ GEM
       clamp (~> 0.3)
       rmodbus (~> 1.1)
     multi_json (1.7.6)
+    nokogiri (1.5.9)
     polyglot (0.3.3)
     rack (1.4.5)
     rack-cache (1.2)
@@ -104,12 +122,26 @@ GEM
       json (~> 1.4)
     ref (1.0.5)
     rmodbus (1.2.0)
+    rspec-core (2.13.1)
+    rspec-expectations (2.13.0)
+      diff-lcs (>= 1.1.3, < 2.0)
+    rspec-mocks (2.13.1)
+    rspec-rails (2.13.2)
+      actionpack (>= 3.0)
+      activesupport (>= 3.0)
+      railties (>= 3.0)
+      rspec-core (~> 2.13.0)
+      rspec-expectations (~> 2.13.0)
+      rspec-mocks (~> 2.13.0)
     sass (3.2.9)
     sass-rails (3.2.6)
       railties (~> 3.2.0)
       sass (>= 3.1.10)
       tilt (~> 1.3)
     serialport (1.1.0)
+    shoulda-matchers (2.1.0)
+      activesupport (>= 3.0.0)
+    spork (0.9.2)
     sprockets (2.2.2)
       hike (~> 1.2)
       multi_json (~> 1.0)
@@ -133,26 +165,40 @@ GEM
     uglifier (2.1.1)
       execjs (>= 0.3.0)
       multi_json (~> 1.0, >= 1.0.2)
+    webrat (0.7.3)
+      nokogiri (>= 1.2.0)
+      rack (>= 1.0)
+      rack-test (>= 0.5.3)
     win32console (1.3.2-x86-mingw32)
+    xpath (2.0.0)
+      nokogiri (~> 1.3)
 
 PLATFORMS
   ruby
   x86-mingw32
 
 DEPENDENCIES
+  bootstrap-sass (~> 2.3.1.0)
+  capybara
   clamp
-  clockwork
   coffee-rails (~> 3.2.1)
+  database_cleaner
   execjs
   foreman
+  haml-rails
   jquery-rails
+  launchy
   meta_request (= 0.2.0)
   modbus-cli
   rails (= 3.2.13)
   rmodbus
+  rspec-rails (~> 2.13.2)
   sass-rails (~> 3.2.3)
   serialport
+  shoulda-matchers
+  spork
   sqlite3
   therubyracer
   thin
   uglifier (>= 1.0.3)
+  webrat

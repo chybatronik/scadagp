@@ -1,0 +1,31 @@
+%h4 Listing equipment
+
+%table.table.table-condensed
+  %tr
+    %th name
+    %th Description
+    %th ip
+    %th 
+    %th 
+    %th 
+    %th 
+
+  - @equipment.each do |equipment| 
+    %tr
+      %td 
+        = equipment.name 
+      %td 
+        = equipment.desc 
+      %td 
+        = equipment.ip 
+      %td 
+        = link_to 'Show Vaiables', equipment_variables_path(equipment)
+      %td 
+        = link_to 'Show', equipment
+      %td 
+        = link_to 'Edit', edit_equipment_path(equipment)
+      %td 
+        = link_to 'Destroy', equipment, method: :delete, data: { confirm: 'Are you sure?' }
+
+
+= link_to 'New Equipment', new_equipment_path
