@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 
-gem 'rails', '3.2.12'
+gem 'rails', '3.2.13'
 
 # Bundle edge Rails instead:
 # gem 'rails', :git => 'git://github.com/rails/rails.git'
@@ -13,17 +13,16 @@ gem "execjs"
 group :assets do
   gem 'thin'
   gem 'sass-rails',   '~> 3.2.3'
+  gem 'haml-rails'
   gem 'coffee-rails', '~> 3.2.1'
-
-  # See https://github.com/sstephenson/execjs#readme for more supported runtimes
-  gem 'therubyracer', :platforms => :ruby
-
+  gem 'therubyracer'
   gem 'uglifier', '>= 1.0.3'
+  gem 'bootstrap-sass', '~> 2.3.1.0'
+end
 end
 
 gem 'jquery-rails'
 
-gem 'clockwork'
 gem 'foreman'
 
 gem 'serialport'
@@ -33,6 +32,13 @@ gem 'modbus-cli'
 
 group :development do
   gem 'meta_request', '0.2.0'
+  gem 'rspec-rails', '~> 2.12.0'
+  gem "database_cleaner"
+  gem "spork"
+  gem "capybara"
+  gem "shoulda-matchers"
+  gem 'launchy'
+  gem 'webrat'
 end
 
 # To use ActiveModel has_secure_password

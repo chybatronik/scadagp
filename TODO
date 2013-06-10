@@ -1,0 +1,5 @@
+setting:
+    rails-botstrap
+    haml
+    rspec
+    cupybara
