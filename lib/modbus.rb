@@ -16,12 +16,4 @@ end
 
 puts "All done."
 
-=begin
 
-
-300.times do
-	cmd = Modbus::Cli::CommandLineRunner.new('modbus-cli') 
-	cmd.run %w(read 192.168.31.68 %MW355 1)
-end
-
-=end
