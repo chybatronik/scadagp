@@ -1,5 +1,2 @@
-setting:
-    rails-botstrap
-    haml
-    rspec
-    cupybara
+convert variable to haml
+relative between variable and equipment
