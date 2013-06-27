@@ -4,6 +4,13 @@ class Read
   def initialize equipment
     @ip = equipment.ip
     @array_variable = equipment.variable
-    
   end
+
+  def run
+    @array_varible.each do |var|
+      
+    end
+  end
+
+  
 end

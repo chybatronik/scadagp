@@ -24,7 +24,16 @@ describe Read do
     expect(@reader.array_variable.first.address).to_not be(nil)
   end
 
-  it "address of variable should be string and have %MV100" do
+  it "address of variable should be string and have numerically" do
     expect(@reader.array_variable.first.address).to match(/^100/)
+    expect(@reader.array_variable[1].address).to match(/^101/)
   end 
+
+  it "haev variable which is type of Variable " do
+    expect(@reader.array_variable.first).to be_a_kind_of(Variable)
+  end
+  
+  it "have variable which have mass is type of Mass" do
+    expect(@reader.array_variable.first.table_value.create(value:1, datetime:Time.now)).to_not be_nil
+  end
 end 
