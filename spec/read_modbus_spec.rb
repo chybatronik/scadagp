@@ -4,7 +4,7 @@ require_relative "../lib/modbus_read.rb"
 
 describe Read do
   before :each do
-    eq = Equipment.create(name:'name', desc:'desc', ip:"127.0.0.1")
+    eq = Equipment.create(name:'name', desc:'desc', ip:"192.168.31.68")
     var1 = Variable.create(address:"100", 
                           equipment_id:eq.id, 
                           var_type:"int")
@@ -15,7 +15,7 @@ describe Read do
   end
   
   it "must get equipment and ip" do
-    expect(@reader.ip).to eq("127.0.0.1") 
+    expect(@reader.ip).to eq("192.168.31.68") 
     expect(@reader.array_variable.length).to be(2) 
   end
 
@@ -35,5 +35,9 @@ describe Read do
   
   it "have variable which have mass is type of Mass" do
     expect(@reader.array_variable.first.table_value.create(value:1, datetime:Time.now)).to_not be_nil
+  end
+  
+  it "can run" do
+    expect(@reader.run().length).to eq(2)
   end
 end 

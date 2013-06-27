@@ -1,3 +1,5 @@
+require './lib/modbus-cli'
+
 class Read
   attr_reader :ip, :array_variable
 
@@ -7,10 +9,15 @@ class Read
   end
 
   def run
-    @array_varible.each do |var|
-      
+    result = []
+    @array_variable.each do |var|
+      cmd = Modbus::Cli::CommandLineRunner.new('modbus-cli') 
+      res = cmd.run(%W(read #{@ip} %MW#{var.address} 1))
+      value = res[var.address].to_f
+      var.table_value.create(value:value, datetime:Time.now)
+      result << res
     end
+    result
   end
 
-  
 end
