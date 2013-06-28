@@ -1,2 +1,3 @@
 convert variable to haml
 relative between variable and equipment
+sqlite give exception Busy - replace sqlite to postgresql

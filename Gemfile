@@ -34,6 +34,7 @@ group :development do
   gem 'rspec-rails', '~> 2.13.2'
   gem "database_cleaner"
   gem "spork"
+  gem "zeus"
   gem "capybara"
   gem "shoulda-matchers"
   gem 'launchy'

@@ -10,14 +10,16 @@ class Read
 
   def run
     result = []
+    prs_array = []
     @array_variable.each do |var|
-      cmd = Modbus::Cli::CommandLineRunner.new('modbus-cli') 
-      res = cmd.run(%W(read #{@ip} %MW#{var.address} 1))
-      value = res[var.address].to_f
-      var.table_value.create(value:value, datetime:Time.now)
-      result << res
+      prs = Thread.new do
+        cmd = Modbus::Cli::CommandLineRunner.new('modbus-cli') 
+        res = cmd.run(%W(read #{@ip} %MW#{var.address} 1))
+        value = res[var.address].to_f
+        #var.table_value.create(value:value, datetime:Time.now)
+        result << res
+      end
+      prs.join
     end
-    result
   end
-
 end

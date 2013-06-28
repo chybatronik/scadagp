@@ -38,6 +38,7 @@ describe Read do
   end
   
   it "can run" do
-    expect(@reader.run().length).to eq(2)
+    as = @reader.run()
+    expect(as.length).to eq(2)
   end
 end 
