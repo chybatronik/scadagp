@@ -52,7 +52,7 @@ class VariablesController < ApplicationController
 
     respond_to do |format|
       if @variable.save
-        format.html { redirect_to @variable, notice: 'Variable was successfully created.' }
+        format.html { redirect_to equipment_variable_url(@variable.equipment, @variable), notice: 'Variable was successfully created.' }
         format.json { render json: @variable, status: :created, location: @variable }
       else
         format.html { render action: "new" }
@@ -84,7 +84,7 @@ class VariablesController < ApplicationController
     @variable.destroy
 
     respond_to do |format|
-      format.html { redirect_to variables_url }
+      format.html { redirect_to :back }
       format.json { head :no_content }
     end
   end

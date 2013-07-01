@@ -13,7 +13,7 @@
     <td><%= variable.datetime_update_value %></td>
     <td><%= link_to 'Show', equipment_variable_path(variable.equipment_id, variable.id) %></td>
     <td><%= link_to 'Edit', edit_equipment_variable_path(variable.equipment_id, variable.id) %></td>
-    <td><%= link_to 'Destroy', equipment_variables_path(variable), method: :delete, data: { confirm: 'Are you sure?' } %></td>
+    <td><%= link_to 'Destroy', equipment_variable_path(variable.equipment_id, variable), method: :delete, data: { confirm: 'Are you sure?' } %></td>
   </tr>
 <% end %>
 </table>

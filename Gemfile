@@ -28,6 +28,7 @@ gem 'serialport'
 gem 'clamp'
 gem 'rmodbus'
 gem 'modbus-cli'
+gem 'pg'
 
 group :development do
   gem 'meta_request', '0.2.0'

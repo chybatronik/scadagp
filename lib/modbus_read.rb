@@ -1,10 +1,31 @@
-require './lib/modbus-cli'
+#require './lib/modbus-cli'
+require 'rmodbus/errors'
+require 'rmodbus/ext'
+require 'rmodbus/debug'
+require 'rmodbus/options'
+require 'rmodbus/rtu'
+require 'rmodbus/tcp'
+require 'rmodbus/slave'
+require 'rmodbus/client'
+require 'rmodbus/server'
+require 'rmodbus/tcp_slave'
+require 'rmodbus/tcp_client'
+require 'rmodbus/tcp_server'
+require 'yaml'
 
 class Read
+  MAX_READ_COIL_COUNT = 1000
+  MAX_READ_WORD_COUNT = 100
+  
   attr_reader :ip, :array_variable
 
   def initialize equipment
-    @ip = equipment.ip
+    @ip    = equipment.ip
+    @host  = equipment.ip
+    @port  = 502
+    @count = 1
+    @slave = 1
+
     @array_variable = equipment.variable
   end
 
@@ -13,13 +34,165 @@ class Read
     prs_array = []
     @array_variable.each do |var|
       prs = Thread.new do
+        p %W(read #{@ip} %MW#{var.address} 1)
         cmd = Modbus::Cli::CommandLineRunner.new('modbus-cli') 
-        res = cmd.run(%W(read #{@ip} %MW#{var.address} 1))
+        res = cmd.run(["read", %W(#{@ip} %MW#{var.address} 1)])
         value = res[var.address].to_f
-        #var.table_value.create(value:value, datetime:Time.now)
+        var.table_value.create(value:value, datetime:Time.now)
         result << res
       end
       prs.join
     end
   end
+
+  def read_floats(sl, value)
+    floats = read_and_unpack(sl, 'g')
+    result = {}
+    (0...@count).each do |n|
+      result[address_to_s(value.address.to_i + n * value.data_size, value)] = floats[n]
+      #puts "#{ '%-10s' % address_to_s(addr_offset + n * data_size)} #{nice_float('% 16.8f' % floats[n])}"
+    end
+  end
+
+  def read_dwords(sl, value)
+    dwords = read_and_unpack(sl, 'N')
+    (0...@count).each do |n|
+      puts "#{ '%-10s' % address_to_s(value.address + n * value.data_size, value)} #{'%10d' % dwords[n]}"
+    end
+  end
+
+  def read_registers(sl,value,  options = {})
+    data = read_data_words(sl, value)
+    if options[:int]
+      data = data.pack('S').unpack('s')
+    end
+    result = {}
+    value.read_range.zip(data).each do |pair|
+      result[address_to_s(pair.first, value)] = pair.last
+      #puts "#{ '%-10s' % address_to_s(pair.first)} #{'%6d' % pair.last}"
+    end
+    return result
+  end
+
+  def read_words_to_file(sl, value)
+    write_data_to_file(read_data_words(sl, value))
+  end
+
+  def read_coils_to_file(s, valuel)
+    write_data_to_file(read_data_coils(sl, value))
+  end
+
+  def write_data_to_file(data, value)
+    File.open(output, 'w') do |file|
+      file.puts({ :host => @host, :port =>@port, :slave => @slave, :offset => address_to_s(addr_offset, value, :modicon), :data => data }.to_yaml)
+    end
+  end
+
+  def read_coils(sl, value)
+    data = read_data_coils(sl)
+    value.read_range.zip(data) do |pair|
+      puts "#{ '%-10s' % address_to_s(pair.first, value)} #{'%d' % pair.last}"
+    end
+  end
+
+  def execute
+    result = []
+    @array_variable.each do |var|
+      prs = Thread.new do
+        ModBus::TCPClient.connect(@host, @port) do |cl|
+          cl.with_slave(@slave) do |sl|
+            sl.debug = true
+
+            case var.var_type 
+            when 'boolean'
+              value = read_coils(sl, var)
+            when 'int'
+              value =  read_registers(sl, var, :int => true)
+            when 'word'
+              value =  read_registers(sl, var)
+            when 'float'
+              value =  read_floats(sl, var)
+            when 'dword'
+              value = read_dwords(sl, var)
+            end
+            var.table_value.create(value:value[value.keys[0]], datetime:Time.now)
+            result << value 
+          end
+          prs.join
+        end
+      end
+    end
+    return result
+  end
+
+  def read_and_unpack(sl, format)
+    # the word ordering is wrong. calling reverse two times effectively swaps every pair
+    read_data_words(sl).reverse.pack('n*').unpack("#{format}*").reverse
+  end
+
+  def read_data_words(sl, value)
+    result = []
+    value.read_range.each_slice(MAX_READ_WORD_COUNT) {|slice| result += sl.read_holding_registers(slice.first, slice.count) }
+    result
+  end
+
+
+  def read_data_coils(sl, value)
+    result = []
+    value.read_range.each_slice(MAX_READ_COIL_COUNT) do |slice|
+      result += sl.read_coils(slice.first, slice.count)
+    end
+    result
+  end
+
+  def data_size
+    case addr_type
+    when :bit, :word, :int
+      1
+    when :float, :dword
+      2
+    end
+  end
+
+  def addr_offset
+    address[:offset]
+  end
+
+  def read_range
+    (addr_offset..(addr_offset + @count * data_size - 1))
+  end
+
+
+  def nice_float(str)
+    m = str.match /^(.*[.][0-9])0*$/
+    if m
+      m[1]
+    else
+      str
+    end
+  end
+
+  def address_to_s(addr, value,  format = :schneider )
+    case format
+    when :schneider
+      case value.var_type
+      when 'boolean'
+        '%M' + addr.to_s
+      when 'word', 'int'
+        '%MW' + addr.to_s
+      when 'dword'
+        '%MD' + addr.to_s
+      when 'float'
+        '%MF' + addr.to_s
+      end
+    when :modicon
+      case value.var_type
+      when 'boolean'
+        (addr + 1).to_s
+      when 'word', 'int'
+        (addr + 400001).to_s
+      end
+    end
+  end
+
 end
