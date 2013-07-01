@@ -34,7 +34,6 @@ class Read
     prs_array = []
     @array_variable.each do |var|
       prs = Thread.new do
-        p %W(read #{@ip} %MW#{var.address} 1)
         cmd = Modbus::Cli::CommandLineRunner.new('modbus-cli') 
         res = cmd.run(["read", %W(#{@ip} %MW#{var.address} 1)])
         value = res[var.address].to_f
@@ -57,7 +56,7 @@ class Read
   def read_dwords(sl, value)
     dwords = read_and_unpack(sl, 'N')
     (0...@count).each do |n|
-      puts "#{ '%-10s' % address_to_s(value.address + n * value.data_size, value)} #{'%10d' % dwords[n]}"
+      #puts "#{ '%-10s' % address_to_s(value.address + n * value.data_size, value)} #{'%10d' % dwords[n]}"
     end
   end
 
@@ -91,34 +90,31 @@ class Read
   def read_coils(sl, value)
     data = read_data_coils(sl)
     value.read_range.zip(data) do |pair|
-      puts "#{ '%-10s' % address_to_s(pair.first, value)} #{'%d' % pair.last}"
+      #puts "#{ '%-10s' % address_to_s(pair.first, value)} #{'%d' % pair.last}"
     end
   end
 
   def execute
     result = []
-    @array_variable.each do |var|
-      prs = Thread.new do
-        ModBus::TCPClient.connect(@host, @port) do |cl|
-          cl.with_slave(@slave) do |sl|
-            sl.debug = true
+    ModBus::TCPClient.connect(@host, @port) do |cl|
+      @array_variable.each do |var|
+        cl.with_slave(@slave) do |sl|
+          sl.debug = false#true
 
-            case var.var_type 
-            when 'boolean'
-              value = read_coils(sl, var)
-            when 'int'
-              value =  read_registers(sl, var, :int => true)
-            when 'word'
-              value =  read_registers(sl, var)
-            when 'float'
-              value =  read_floats(sl, var)
-            when 'dword'
-              value = read_dwords(sl, var)
-            end
-            var.table_value.create(value:value[value.keys[0]], datetime:Time.now)
-            result << value 
+          case var.var_type 
+          when 'boolean'
+            value = read_coils(sl, var)
+          when 'int'
+            value =  read_registers(sl, var, :int => true)
+          when 'word'
+            value =  read_registers(sl, var)
+          when 'float'
+            value =  read_floats(sl, var)
+          when 'dword'
+            value = read_dwords(sl, var)
           end
-          prs.join
+          #var.table_value.create(value:value[value.keys[0]], datetime:Time.now)
+          result << value 
         end
       end
     end
