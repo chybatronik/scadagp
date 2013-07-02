@@ -8,7 +8,7 @@
 # )
 
 eq = Equipment.create(name:'name1', desc:'desc', ip:"192.168.31.68")
-eq_2 = Equipment.create(name:'name2', desc:'desc', ip:"192.168.31.68")
+eq_2 = Equipment.create(name:'name2', desc:'desc', ip:"192.168.31.67")
 100.times do |index|
   Variable.create(address:"#{100 + index}", 
                       equipment_id:eq.id, 
