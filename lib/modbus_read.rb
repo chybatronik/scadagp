@@ -14,6 +14,7 @@ require 'rmodbus/tcp_server'
 require 'yaml'
 
 class Read
+
   MAX_READ_COIL_COUNT = 1000
   MAX_READ_WORD_COUNT = 100
   
@@ -94,12 +95,45 @@ class Read
     end
   end
 
+  def execute_range
+    #find min and max address
+    min, max = 10000, 0
+    @array_variable.each do |var|
+      if var.address.to_i >= max
+        max = var.address.to_i
+      end
+      if var.address.to_i <= min
+        min = var.address.to_i
+      end
+    end
+    rezult = {}
+    rezult_read = []
+    ModBus::TCPClient.connect(@host, @port) do |cl|
+      cl.with_slave(1) do |slave|
+        slave.debug = false
+        regs = slave.holding_registers
+        data =  regs[min..max]
+        data.each do |ea|
+          rezult_read << ea
+        end
+        #p slave.read_holding_registers(100, 100)
+      end
+    end
+    @array_variable.each do |var|
+      var.table_value.create(value:rezult_read[(var.address.to_i - min)], datetime:Time.now)
+      rezult[var.address] =  rezult_read[(var.address.to_i - min)]
+    end
+    rezult
+  end
+
   def execute
     result = []
+    slave  = 1
     ModBus::TCPClient.connect(@host, @port) do |cl|
-      @array_variable.each do |var|
-        cl.with_slave(@slave) do |sl|
+      cl.with_slave(slave) do |sl|
+        @array_variable.each do |var|
           sl.debug = false#true
+          regs = sl.holding_registers
 
           case var.var_type 
           when 'boolean'
@@ -112,6 +146,9 @@ class Read
             value =  read_floats(sl, var)
           when 'dword'
             value = read_dwords(sl, var)
+          end
+          if result.length%20 == 0
+            slave += 1
           end
           #var.table_value.create(value:value[value.keys[0]], datetime:Time.now)
           result << value 

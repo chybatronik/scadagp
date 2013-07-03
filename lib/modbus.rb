@@ -1,4 +1,3 @@
-require './lib/modbus-cli'
 require './lib/modbus_read'
 require 'eventmachine'
 ENV["RAILS_ENV"] ||= 'development'
@@ -10,11 +9,10 @@ EM.run do
     start_time = Time.now
     eqs = Equipment.all
     eqs.each do |eq|
-      rd = Read.new eq
-      p rd.execute
+        rd = Read.new eq
+        p "_____________", eq.ip
+        p rd.execute_range
     end
-    #cmd = Modbus::Cli::CommandLineRunner.new('modbus-cli') 
-    #cmd.run %w(read 192.168.31.68 %MW355 300) 
     delta = Time.now - start_time
     puts "srart_time #{start_time} in during #{delta}"
     p '...............................................................'
